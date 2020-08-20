@@ -81,12 +81,39 @@ module.exports = app => {
     .delete(app.api.secretariat.bulletin.remove)
     .put(app.api.secretariat.bulletin.put)
 
+    app.route('/secretariat/calendar')
+    .get(app.api.secretariat.calendar.get)
+    .post(app.api.secretariat.calendar.post)
+
+    app.route('/secretariat/calendar/:id')
+    .get(app.api.secretariat.calendar.getById)
+    .delete(app.api.secretariat.calendar.remove)
+    .put(app.api.secretariat.calendar.put)
+
+    app.route('/secretariat/payment')
+    .get(app.api.secretariat.payment.get)
+    .post(app.api.secretariat.payment.post)
+
+    app.route('/secretariat/payment/:id')
+    .get(app.api.secretariat.payment.getById)
+    .delete(app.api.secretariat.payment.remove)
+    .put(app.api.secretariat.payment.put)
+
 //student 
     app.route('/student/student/:id')
     .get(app.api.student.student.get)
 
     app.route('/student/bulletin/:id')
     .get(app.api.student.bulletin.get)
+
+    app.route('/student/calendar/:id')
+    .get(app.api.student.calendar.get)
+
+    app.route('/student/multimidia/:id')
+    .get(app.api.student.multimidia.get)
+
+    app.route('/student/payment/:id')
+    .get(app.api.student.payment.get)
 
 //teacher
     app.route('/teacher/clas/:id')
@@ -121,6 +148,24 @@ module.exports = app => {
     .get(app.api.teacher.scraps.getById)
     .delete(app.api.teacher.scraps.remove)
     .put(app.api.teacher.scraps.put)
+
+    app.route('/teacher/calendar')
+    .get(app.api.teacher.calendar.get)
+    .post(app.api.teacher.calendar.post)
+
+    app.route('/teacher/calendar/:id')
+    .get(app.api.teacher.calendar.getById)
+    .delete(app.api.teacher.calendar.remove)
+    .put(app.api.teacher.calendar.put)
+
+    app.route('/teacher/multimidia')
+    .get(app.api.teacher.multimidia.get)
+    .post(app.api.teacher.multimidia.post)
+
+    app.route('/teacher/multimidia/:id')
+    .get(app.api.teacher.multimidia.getById)
+    .delete(app.api.teacher.multimidia.remove)
+    .put(app.api.teacher.multimidia.put)
 
 //adm
     app.route('/administrator')

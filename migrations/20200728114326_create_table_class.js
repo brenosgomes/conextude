@@ -5,7 +5,6 @@ exports.up = function(knex) {
         table.string("clas_name").notNull();
         table.string("clas_series").notNull();
         table.string("clas_timetable").notNull();
-        table.string("clas_calendar").notNull();
         
     })
 };
