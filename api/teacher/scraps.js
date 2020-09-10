@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(scraps)
     }
 
-    const getById = (req, res) => {
-        app.db('scraps')
-        .where({ scraps_id: req.params.id })
-        .first()
-        .then(scraps => res.json(scraps))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'scraps does not exist!')
+    
+            const getIdScraps = await knex('scraps')
+                .where({ scraps_id: req.params.id }).first()
+            existsOrError(getIdScraps, 'scraps not found')
+
+            res.json(getIdScraps)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const scraps = req.body;
         const scraps_id = req.params.id;
-        if (scraps_id) {
-            try {
-                await app
-                    .db("scraps")
-                    .update(scraps)
-                    .where({ scraps_id: scraps_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(scraps_id, 'scraps does not exist!')
+            
+            const attScraps = await knex("scraps")
+                .update(scraps)
+                .where({ scraps_id: scraps_id })
+            existsOrError(attScraps, 'scraps not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

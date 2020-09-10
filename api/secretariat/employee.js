@@ -4,15 +4,24 @@ module.exports = app => {
     const { existsOrError } = app.api.validator
 
     const get = async (req, res) => {
-        const employee = await knex("employee").select("*");
+        const employee = await knex("employee")
+            .select("employee_id", "person_name", "office_id", "employee_salary")
+            .innerJoin("person", "person.person_id", "employee.person_id");
         return res.json(employee)
     }
 
-    const getById = (req, res) => {
-        app.db('employee')
-        .where({ employee_id: req.params.id })
-        .first()
-        .then(employee => res.json(employee))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'employee does not exist!')
+    
+            const getIdEmployee = await knex('employee')
+                .where({ employee_id: req.params.id }).first()
+            existsOrError(getIdEmployee, 'employee not found')
+
+            res.json(getIdEmployee)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +53,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const employee = req.body;
         const employee_id = req.params.id;
-        if (employee_id) {
-            try {
-                await app
-                    .db("employee")
-                    .update(employee)
-                    .where({ employee_id: employee_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(employee_id, 'employee does not exist!')
+            
+            const attEmployee = await knex("employee")
+                .update(employee)
+                .where({ employee_id: employee_id })
+            existsOrError(attEmployee, 'employee not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

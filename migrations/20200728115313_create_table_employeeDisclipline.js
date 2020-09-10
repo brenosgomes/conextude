@@ -7,7 +7,7 @@ exports.up = function(knex) {
         table.integer("discipline_id").unsigned().notNull();
         table.foreign("discipline_id").references("discipline_id").inTable("discipline").onDelete('CASCADE');
         table.integer("clas_id").unsigned().notNull();
-        table.foreign("clas_id").references("clas_id").inTable("clas");
+        table.foreign("clas_id").references("clas_id").inTable("clas").onDelete('CASCADE');
     })
 };
 

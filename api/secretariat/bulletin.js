@@ -8,18 +8,25 @@ module.exports = app => {
         return res.json(bulletin)
     }
 
-    const getById = (req, res) => {
-        app.db('bulletin')
-        .where({ bulletin_id: req.params.id })
-        .first()
-        .then(bulletin => res.json(bulletin))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'bulletin does not exist!')
+    
+            const getIdBulletin = await knex('bulletin')
+                .where({ bulletin_id: req.params.id }).first()
+            existsOrError(getIdBulletin, 'bulletin not found')
+
+            res.json(getIdBulletin)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
         try {
             existsOrError(req.params.id, 'bulletin does not exist!')
 
-            const rowsDeleted = await app.db('bulletin').del()
+            const rowsDeleted = await knex('bulletin').del()
                 .where({ bulletin_id: req.params.id })
             existsOrError(rowsDeleted, 'bulletin not found')
 
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const bulletin = req.body;
         const bulletin_id = req.params.id;
-        if (bulletin_id) {
-            try {
-                await app
-                    .db("bulletin")
-                    .update(bulletin)
-                    .where({ bulletin_id: bulletin_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(bulletin_id, 'bulletin does not exist!')
+            
+            const attBulletin = await knex("bulletin")
+                .update(bulletin)
+                .where({ bulletin_id: bulletin_id })
+            existsOrError(attBulletin, 'bulletin not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

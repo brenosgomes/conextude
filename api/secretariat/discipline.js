@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(discipline)
     }
 
-    const getById = (req, res) => {
-        app.db('discipline')
-        .where({ discipline_id: req.params.id })
-        .first()
-        .then(discipline => res.json(discipline))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'discipline does not exist!')
+    
+            const getIdDiscipline = await knex('discipline')
+                .where({ discipline_id: req.params.id }).first()
+            existsOrError(getIdDiscipline, 'discipline not found')
+
+            res.json(getIdDiscipline)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const discipline = req.body;
         const discipline_id = req.params.id;
-        if (discipline_id) {
-            try {
-                await app
-                    .db("discipline")
-                    .update(discipline)
-                    .where({ discipline_id: discipline_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(discipline_id, 'discipline does not exist!')
+            
+            const attDiscipline = await knex("discipline")
+                .update(discipline)
+                .where({ discipline_id: discipline_id })
+            existsOrError(attDiscipline, 'discipline not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

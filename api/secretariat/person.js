@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(person)
     }
 
-    const getById = (req, res) => {
-        app.db('person')
-        .where({ person_id: req.params.id })
-        .first()
-        .then(person => res.json(person))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'person does not exist!')
+    
+            const getIdPerson = await knex('person')
+                .where({ person_id: req.params.id }).first()
+            existsOrError(getIdPerson, 'person not found')
+
+            res.json(getIdPerson)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const person = req.body;
         const person_id = req.params.id;
-        if (person_id) {
-            try {
-                await app
-                    .db("person")
-                    .update(person)
-                    .where({ person_id: person_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(person_id, 'person does not exist!')
+            
+            const attPerson = await knex("person")
+                .update(person)
+                .where({ person_id: person_id })
+            existsOrError(attPerson, 'person not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

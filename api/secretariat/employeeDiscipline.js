@@ -8,11 +8,44 @@ module.exports = app => {
         return res.json(employeeDiscipline)
     }
 
-    const getById = (req, res) => {
-        app.db('employeeDiscipline')
-        .where({ employeeDiscipline_id: req.params.id })
-        .first()
-        .then(employeeDiscipline => res.json(employeeDiscipline))
+    const getById = async (req, res) => {
+        const { type } = req.headers
+        try {
+            existsOrError(req.params.id, 'employeeDiscipline does not exist!')
+            if(type === "clas_id"){
+                const getIdEmployeeDiscipline = await knex("employeeDiscipline")
+                .select(
+                  "employeeDiscipline_id",
+                  "employeeDiscipline.discipline_id",
+                  "discipline_name",
+                  "discipline_workload",
+                  "employeeDiscipline.employee_id",
+                  "person_name"
+                )
+                .innerJoin(
+                  "employee",
+                  "employeeDiscipline.employee_id",
+                  "employee.employee_id"
+                )
+                .innerJoin(
+                  "discipline",
+                  "employeeDiscipline.discipline_id",
+                  "discipline.discipline_id"
+                )
+                .innerJoin("person", "employee.person_id", "person.person_id")
+                .where({ clas_id: req.params.id })
+                .then((employeeDiscipline) => {
+                  res.json(employeeDiscipline);
+                });
+            } else {
+                const getIdEmployeeDiscipline = await knex('employeeDiscipline')
+                    .where({ employeeDiscipline_id: req.params.id }).first()
+                existsOrError(getIdEmployeeDiscipline, 'employeeDiscipline not found')
+            }
+            res.json(getIdEmployeeDiscipline)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +77,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const employeeDiscipline = req.body;
         const employeeDiscipline_id = req.params.id;
-        if (employeeDiscipline_id) {
-            try {
-                await app
-                    .db("employeeDiscipline")
-                    .update(employeeDiscipline)
-                    .where({ employeeDiscipline_id: employeeDiscipline_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(employeeDiscipline_id, 'employeeDiscipline does not exist!')
+            
+            const attEmployeeDiscipline = await knex("employeeDiscipline")
+                .update(employeeDiscipline)
+                .where({ employeeDiscipline_id: employeeDiscipline_id })
+            existsOrError(attEmployeeDiscipline, 'employeeDiscipline not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(calendar)
     }
 
-    const getById = (req, res) => {
-        app.db('calendar')
-        .where({ calendar_id: req.params.id })
-        .first()
-        .then(calendar => res.json(calendar))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'calendar does not exist!')
+    
+            const getIdCalendar = await knex('calendar')
+                .where({ calendar_id: req.params.id }).first()
+            existsOrError(getIdCalendar, 'calendar not found')
+
+            res.json(getIdCalendar)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const calendar = req.body;
         const calendar_id = req.params.id;
-        if (calendar_id) {
-            try {
-                await app
-                    .db("calendar")
-                    .update(calendar)
-                    .where({ calendar_id: calendar_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(calendar_id, 'calendar does not exist!')
+            
+            const attCalendar = await knex("calendar")
+                .update(calendar)
+                .where({ calendar_id: calendar_id })
+            existsOrError(attCalendar, 'calendar not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
     

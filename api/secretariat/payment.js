@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(payment)
     }
 
-    const getById = (req, res) => {
-        app.db('payment')
-        .where({ payment_id: req.params.id })
-        .first()
-        .then(payment => res.json(payment))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'payment does not exist!')
+    
+            const getIdPayment = await knex('payment')
+                .where({ payment_id: req.params.id }).first()
+            existsOrError(getIdPayment, 'payment not found')
+
+            res.json(getIdPayment)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const payment = req.body;
         const payment_id = req.params.id;
-        if (payment_id) {
-            try {
-                await app
-                    .db("payment")
-                    .update(payment)
-                    .where({ payment_id: payment_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(payment_id, 'payment does not exist!')
+            
+            const attPayment = await knex("payment")
+                .update(payment)
+                .where({ payment_id: payment_id })
+            existsOrError(attPayment, 'payment not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
     

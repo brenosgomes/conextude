@@ -10,11 +10,18 @@ module.exports = app => {
         return res.json(student)
     }
 
-    const getById = (req, res) => {
-        app.db('student')
-        .where({ student_id: req.params.id })
-        .first()
-        .then(student => res.json(student))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'student does not exist!')
+    
+            const getIdStudent = await knex('student')
+                .where({ student_id: req.params.id }).first()
+            existsOrError(getIdStudent, 'student not found')
+
+            res.json(getIdStudent)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -46,20 +53,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const student = req.body;
         const student_id = req.params.id;
-        if (student_id) {
-            try {
-                await app
-                    .db("student")
-                    .update(student)
-                    .where({ student_id: student_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(student_id, 'student does not exist!')
+            
+            const attStudent = await knex("student")
+                .update(student)
+                .where({ student_id: student_id })
+            existsOrError(attStudent, 'student not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

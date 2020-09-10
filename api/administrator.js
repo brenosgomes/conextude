@@ -16,24 +16,30 @@ module.exports = app => {
 
     const remove = async (req, res) => {
         try {
-          existsOrError(req.params.id, 'administrator não existe!')
+            existsOrError(req.params.id, 'administrator não existe!')
     
-          const rowsDeleted = await app.db('administrator').del()
-            .where({ administrator_id: req.params.id })
-          existsOrError(rowsDeleted, 'administrator não encontrado')
+            const rowsDeleted = await knex('administrator').del()
+                .where({ administrator_id: req.params.id })
+            existsOrError(rowsDeleted, 'administrator não encontrado')
     
-          res.status(204).send()
-        }
-        catch (msg) {
-          return res.status(400).send(msg)
+            res.status(204).send()
+        } catch (msg) {
+            return res.status(400).send(msg)
         }
       }
     
-    const getById = (req, res) => {
-        app.db('administrator')
-          .where({ administrator_id: req.params.id })
-          .first()
-          .then(administrator => res.json(administrator))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'administrator não existe!')
+    
+            const getIdAdministrator = await knex('administrator')
+                .where({ administrator_id: req.params.id }).first()
+            existsOrError(getIdAdministrator, 'administrator não encontrado')
+
+            res.json(getIdAdministrator)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
       }
 
     const post = async (req, res) => {
@@ -50,6 +56,7 @@ module.exports = app => {
                 notExistsOrError(administratorFromDB, 'administrator já cadastrado')
                 res.status(400)
             }
+            res.json(administratorFromDB);
         } catch (msg) {
             console.log(msg)
             return res.status(400).send(msg)
@@ -67,20 +74,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const administrator = req.body;
         const administrator_id = req.params.id;
-        if (administrator_id) {
-            try {
-                await app
-                    .db("administrator")
-                    .update(administrator)
-                    .where({ administrator_id: administrator_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(administrator_id, 'administrator does not exist!')
+            
+            const attAdministrator = await knex("administrator")
+                .update(administrator)
+                .where({ administrator_id: administrator_id })
+            existsOrError(attAdministrator, 'administrator not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

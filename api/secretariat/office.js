@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(office)
     }
 
-    const getById = (req, res) => {
-        app.db('office')
-        .where({ office_id: req.params.id })
-        .first()
-        .then(office => res.json(office))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'office does not exist!')
+    
+            const getIdOffice = await knex('office')
+                .where({ office_id: req.params.id }).first()
+            existsOrError(getIdOffice, 'office not found')
+
+            res.json(getIdOffice)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const office = req.body;
         const office_id = req.params.id;
-        if (office_id) {
-            try {
-                await app
-                    .db("office")
-                    .update(office)
-                    .where({ office_id: office_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(office_id, 'office does not exist!')
+            
+            const attOffice = await knex("office")
+                .update(office)
+                .where({ office_id: office_id })
+            existsOrError(attOffice, 'office not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

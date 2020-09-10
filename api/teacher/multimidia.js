@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(multimidia)
     }
 
-    const getById = (req, res) => {
-        app.db('multimidia')
-        .where({ multimidia_id: req.params.id })
-        .first()
-        .then(multimidia => res.json(multimidia))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'multimida does not exist!')
+    
+            const getIdMultimida = await knex('multimida')
+                .where({ multimida_id: req.params.id }).first()
+            existsOrError(getIdMultimida, 'multimida not found')
+
+            res.json(getIdMultimida)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const multimidia = req.body;
         const multimidia_id = req.params.id;
-        if (multimidia_id) {
-            try {
-                await app
-                    .db("multimidia")
-                    .update(multimidia)
-                    .where({ multimidia_id: multimidia_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(multimida_id, 'multimida does not exist!')
+            
+            const attMultimida = await knex("multimida")
+                .update(multimida)
+                .where({ multimida_id: multimida_id })
+            existsOrError(attMultimida, 'multimida not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
     

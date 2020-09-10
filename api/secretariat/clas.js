@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(clas)
     }
 
-    const getById = (req, res) => {
-        app.db('clas')
-        .where({ clas_id: req.params.id })
-        .first()
-        .then(clas => res.json(clas))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'clas does not exist!')
+    
+            const getIdClas = await knex('clas')
+                .where({ clas_id: req.params.id }).first()
+            existsOrError(getIdClas, 'clas not found')
+
+            res.json(getIdClas)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const clas = req.body;
         const clas_id = req.params.id;
-        if (clas_id) {
-            try {
-                await app
-                    .db("clas")
-                    .update(clas)
-                    .where({ clas_id: clas_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(clas_id, 'clas does not exist!')
+            
+            const attClas = await knex("clas")
+                .update(clas)
+                .where({ clas_id: clas_id })
+            existsOrError(attClas, 'clas not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
 

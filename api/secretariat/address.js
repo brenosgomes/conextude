@@ -8,11 +8,18 @@ module.exports = app => {
         return res.json(address)
     }
 
-    const getById = (req, res) => {
-        app.db('address')
-        .where({ address_id: req.params.id })
-        .first()
-        .then(address => res.json(address))
+    const getById = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'address does not exist!')
+    
+            const getIdAddress = await knex('address')
+                .where({ address_id: req.params.id }).first()
+            existsOrError(getIdAddress, 'address not found')
+
+            res.json(getIdAddress)
+        } catch (msg) {
+            return res.status(400).send(msg)
+        }
     }
 
     const remove = async (req, res) => {
@@ -44,20 +51,17 @@ module.exports = app => {
     const put = async (req, res) => {
         const address = req.body;
         const address_id = req.params.id;
-        if (address_id) {
-            try {
-                await app
-                    .db("address")
-                    .update(address)
-                    .where({ address_id: address_id })
-
-                res.status(200).send();
-            } catch (err) {
-                console.log(err);
-                res.status(500).send(err);
-            }
-        } else {
-            return res.status(400);
+        try{
+            existsOrError(address_id, 'address does not exist!')
+            
+            const attAddress = await knex("address")
+                .update(address)
+                .where({ address_id: address_id })
+            existsOrError(attAddress, 'address not found')
+            
+            res.status(200).send();
+        } catch(msg) {
+            return res.status(400).send(msg);   
         }
     }
     
