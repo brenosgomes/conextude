@@ -1,14 +1,15 @@
-const knex = require('../../config/db')
+const knex = require("../../config/db");
 
-module.exports = app => {
-    const { existsOrError } = app.api.validator
+module.exports = (app) => {
+  const { existsOrError } = app.api.validator;
 
-    const get = async (req, res) => {
-        const student = await knex("student").select("person_name", "clas_name", "student_registration")
-                                .innerJoin("person", "person.person_id", "student.person_id")
-                                .innerJoin("clas", "clas.clas_id", "student.clas_id");
-        return res.json(student)
-    }
+  const get = async (req, res) => {
+    const student = await knex("student")
+      .select("student_id", "person_name", "clas_name", "student_registration")
+      .innerJoin("person", "person.person_id", "student.person_id")
+      .innerJoin("clas", "clas.clas_id", "student.clas_id");
+    return res.json(student);
+  };
 
     const getById = async (req, res) => {
         try {
@@ -24,31 +25,32 @@ module.exports = app => {
         }
     }
 
-    const remove = async (req, res) => {
-        try {
-            existsOrError(req.params.id, 'student does not exist!')
+  const remove = async (req, res) => {
+    try {
+      existsOrError(req.params.id, "student does not exist!");
 
-            const rowsDeleted = await app.db('student').del()
-                .where({ student_id: req.params.id })
-            existsOrError(rowsDeleted, 'student not found')
+      const rowsDeleted = await app
+        .db("student")
+        .del()
+        .where({ student_id: req.params.id });
+      existsOrError(rowsDeleted, "student not found");
 
-            res.status(204).send()
-        }
-        catch (msg) {
-            return res.status(400).send(msg)
-        }
+      res.status(204).send();
+    } catch (msg) {
+      return res.status(400).send(msg);
     }
+  };
 
-    const post = async (req, res) => {
-        const student = req.body;
-        try {
-            const newStudent = await knex("student").insert(student)
-            res.json(newStudent);
-        }catch (err) {
-            console.log(res);
-            return res.status(500).send(err);
-        }
+  const post = async (req, res) => {
+    const student = req.body;
+    try {
+      const newStudent = await knex("student").insert(student);
+      res.json(newStudent);
+    } catch (err) {
+      console.log(res);
+      return res.status(500).send(err);
     }
+  };
 
     const put = async (req, res) => {
         const student = req.body;
@@ -67,5 +69,5 @@ module.exports = app => {
         }
     }
 
-    return { get, getById, post, put, remove }
-}
+  return { get, getById, post, put, remove };
+};

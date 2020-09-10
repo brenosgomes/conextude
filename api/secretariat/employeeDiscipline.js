@@ -1,12 +1,15 @@
-const knex = require('../../config/db')
+const knex = require("../../config/db");
 
-module.exports = app => {
-    const { existsOrError } = app.api.validator
+module.exports = (app) => {
+  const { existsOrError } = app.api.validator;
 
-    const get = async (req, res) => {
-        const employeeDiscipline = await knex("employeeDiscipline").select("*");
-        return res.json(employeeDiscipline)
-    }
+  const get = async (req, res) => {
+    const employeeDiscipline = await knex("employeeDiscipline").select("*");
+    return res.json(employeeDiscipline);
+  };
+
+  const getById = (req, res) => {
+    const { type } = req.headers;
 
     const getById = async (req, res) => {
         const { type } = req.headers
@@ -47,32 +50,36 @@ module.exports = app => {
             return res.status(400).send(msg)
         }
     }
+  };
 
-    const remove = async (req, res) => {
-        try {
-            existsOrError(req.params.id, 'employeeDiscipline does not exist!')
+  const remove = async (req, res) => {
+    try {
+      existsOrError(req.params.id, "employeeDiscipline does not exist!");
 
-            const rowsDeleted = await app.db('employeeDiscipline').del()
-                .where({ employeeDiscipline_id: req.params.id })
-            existsOrError(rowsDeleted, 'employeeDiscipline not found')
+      const rowsDeleted = await app
+        .db("employeeDiscipline")
+        .del()
+        .where({ employeeDiscipline_id: req.params.id });
+      existsOrError(rowsDeleted, "employeeDiscipline not found");
 
-            res.status(204).send()
-        }
-        catch (msg) {
-            return res.status(400).send(msg)
-        }
+      res.status(204).send();
+    } catch (msg) {
+      return res.status(400).send(msg);
     }
+  };
 
-    const post = async (req, res) => {
-        const employeeDiscipline = req.body;
-        try {
-            const newEmployeeDiscipline = await knex("employeeDiscipline").insert(employeeDiscipline)
-            res.json(newEmployeeDiscipline);
-        }catch (err) {
-            console.log(res);
-            return res.status(500).send(err);
-        }
+  const post = async (req, res) => {
+    const employeeDiscipline = req.body;
+    try {
+      const newEmployeeDiscipline = await knex("employeeDiscipline").insert(
+        employeeDiscipline
+      );
+      res.json(newEmployeeDiscipline);
+    } catch (err) {
+      console.log(res);
+      return res.status(500).send(err);
     }
+  };
 
     const put = async (req, res) => {
         const employeeDiscipline = req.body;
@@ -91,5 +98,5 @@ module.exports = app => {
         }
     }
 
-    return { get, getById, post, put, remove }
-}
+  return { get, getById, post, put, remove };
+};

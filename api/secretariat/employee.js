@@ -1,7 +1,7 @@
-const knex = require('../../config/db')
+const knex = require("../../config/db");
 
-module.exports = app => {
-    const { existsOrError } = app.api.validator
+module.exports = (app) => {
+  const { existsOrError } = app.api.validator;
 
     const get = async (req, res) => {
         const employee = await knex("employee")
@@ -24,31 +24,32 @@ module.exports = app => {
         }
     }
 
-    const remove = async (req, res) => {
-        try {
-            existsOrError(req.params.id, 'employee does not exist!')
+  const remove = async (req, res) => {
+    try {
+      existsOrError(req.params.id, "employee does not exist!");
 
-            const rowsDeleted = await app.db('employee').del()
-                .where({ employee_id: req.params.id })
-            existsOrError(rowsDeleted, 'employee not found')
+      const rowsDeleted = await app
+        .db("employee")
+        .del()
+        .where({ employee_id: req.params.id });
+      existsOrError(rowsDeleted, "employee not found");
 
-            res.status(204).send()
-        }
-        catch (msg) {
-            return res.status(400).send(msg)
-        }
+      res.status(204).send();
+    } catch (msg) {
+      return res.status(400).send(msg);
     }
+  };
 
-    const post = async (req, res) => {
-        const employee = req.body;
-        try {
-            const newEmployee = await knex("employee").insert(employee)
-            res.json(newEmployee);
-        }catch (err) {
-            console.log(res);
-            return res.status(500).send(err);
-        }
+  const post = async (req, res) => {
+    const employee = req.body;
+    try {
+      const newEmployee = await knex("employee").insert(employee);
+      res.json(newEmployee);
+    } catch (err) {
+      console.log(res);
+      return res.status(500).send(err);
     }
+  };
 
     const put = async (req, res) => {
         const employee = req.body;
@@ -67,5 +68,5 @@ module.exports = app => {
         }
     }
 
-    return { get, getById, post, put, remove }
+  return { get, getById, post, put, remove }
 }
