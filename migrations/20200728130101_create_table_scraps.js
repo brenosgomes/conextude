@@ -4,7 +4,9 @@ exports.up = function(knex) {
         table.increments("scraps_id").primary();
         table.integer("clas_id").unsigned().notNull();
         table.foreign("clas_id").references("clas_id").inTable("clas").onDelete('CASCADE');
-        table.string("scraps_scraps").notNull();
+        table.string("scraps_title").notNull();
+        table.string("scraps_description").notNull();
+        table.date("scraps_date").notNull();
     })
 };
 

@@ -101,26 +101,53 @@ module.exports = app => {
 
 //student 
     app.route('/student/student/:id')
-    .get(app.api.student.student.get)
+    .get(app.api.student.student.getById)
 
     app.route('/student/bulletin/:id')
-    .get(app.api.student.bulletin.get)
+    .get(app.api.student.bulletin.getById)
 
     app.route('/student/calendar/:id')
-    .get(app.api.student.calendar.get)
+    .get(app.api.student.calendar.getById)
 
     app.route('/student/multimidia/:id')
-    .get(app.api.student.multimidia.get)
+    .get(app.api.student.multimidia.getById)
 
     app.route('/student/payment/:id')
-    .get(app.api.student.payment.get)
+    .get(app.api.student.payment.getById)
+
+    app.route('/student/lesson/:id')
+    .get(app.api.student.lesson.getById)
+
+    app.route('/student/fault/:id')
+    .get(app.api.student.fault.getById)
+
+    app.route('/student/observation/:id')
+    .get(app.api.student.observation.getById)
+
+    app.route('/student/topic')
+    .get(app.api.student.topic.get)
+    .post(app.api.student.topic.post)
+
+    app.route('/student/topic/:id')
+    .get(app.api.student.topic.getById)
+    .delete(app.api.student.topic.remove)
+    .put(app.api.student.topic.put)
+
+    app.route('/student/answer')
+    .get(app.api.student.answer.get)
+    .post(app.api.student.answer.post)
+
+    app.route('/student/answer/:id')
+    .get(app.api.student.answer.getById)
+    .delete(app.api.student.answer.remove)
+    .put(app.api.student.answer.put)
 
 //teacher
     app.route('/teacher/clas/:id')
     .get(app.api.teacher.clas.getById)
 
-    app.route('/teacher/employeeDiscipline/:id')
-    .get(app.api.teacher.employeeDiscipline.getById)
+    app.route('/teacher/classroom/:id')
+    .get(app.api.teacher.classroom.getById)
 
     app.route('/teacher/bulletin')
     .get(app.api.teacher.bulletin.get)
@@ -166,6 +193,33 @@ module.exports = app => {
     .get(app.api.teacher.multimidia.getById)
     .delete(app.api.teacher.multimidia.remove)
     .put(app.api.teacher.multimidia.put)
+
+    app.route('/teacher/topic')
+    .get(app.api.teacher.topic.get)
+    .post(app.api.teacher.topic.post)
+
+    app.route('/teacher/topic/:id')
+    .get(app.api.teacher.topic.getById)
+    .delete(app.api.teacher.topic.remove)
+    .put(app.api.teacher.topic.put)
+
+    app.route('/teacher/answer')
+    .get(app.api.teacher.answer.get)
+    .post(app.api.teacher.answer.post)
+
+    app.route('/teacher/answer/:id')
+    .get(app.api.teacher.answer.getById)
+    .delete(app.api.teacher.answer.remove)
+    .put(app.api.teacher.answer.put)
+
+    app.route('/teacher/observation')
+    .get(app.api.teacher.observation.get)
+    .post(app.api.teacher.observation.post)
+
+    app.route('/teacher/observation/:id')
+    .get(app.api.teacher.observation.getById)
+    .delete(app.api.teacher.observation.remove)
+    .put(app.api.teacher.observation.put)
 
 //adm
     app.route('/administrator')

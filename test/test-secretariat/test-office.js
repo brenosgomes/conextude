@@ -10,7 +10,7 @@ describe('office', () => {
     describe('/POST office', () => {
         it('Check the registration of office', (done) => {
             let office = { 
-                office_name: "Diretor"
+                office_name: "Professor"
             }
             chai.request('http://localhost:5000')
                 .post('/secretariat/office/')
@@ -20,7 +20,6 @@ describe('office', () => {
                     done();
                 });
         });
-
     });
 
 

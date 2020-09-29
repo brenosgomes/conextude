@@ -2,7 +2,7 @@ const knex = require('../../config/db')
 
 module.exports = app => {    
     const { existsOrError } = app.api.validator
-    const get = async (req, res) => {
+    const getById = async (req, res) => {
         try {
             existsOrError(req.params.id, 'bulletin does not exist!')
     
@@ -17,5 +17,5 @@ module.exports = app => {
         }
     }
 
-    return { get }
+    return { getById }
 }
