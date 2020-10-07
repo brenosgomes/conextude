@@ -40,6 +40,10 @@ describe('address', () => {
         });
     });
 
+    const get = async (req, res) => {
+        const get = await knex('address').where({ address_id: 2 }).first()
+        console.log(get);
+    }
     
     describe('/GET/:id address', () => {
         it('GET in address by ID', (done) => {

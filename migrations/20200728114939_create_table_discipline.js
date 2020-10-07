@@ -4,6 +4,7 @@ exports.up = function(knex) {
         table.increments("discipline_id").primary();
         table.string("discipline_name").notNull();
         table.string("discipline_workload").notNull();
+        table.string("discipline_description").notNull();
     })
 };
 

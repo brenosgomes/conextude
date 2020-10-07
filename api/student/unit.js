@@ -4,14 +4,14 @@ module.exports = app => {
     const { existsOrError } = app.api.validator
     const getById = async (req, res) => {
         try {
-            existsOrError(req.params.id, 'bulletin does not exist!')
+            existsOrError(req.params.id, 'unit does not exist!')
     
-            const getIdBulletin = await knex("bulletin").select("*")
-                            .innerJoin("credit", "bulletin.bulletin_id", "credit.bulletin_id")
+            const getIdUnit = await knex("unit").select("*")
+                            .innerJoin("credit", "unit.unit_id", "credit.unit_id")
                             .where({ student_id: req.params.id });
-            existsOrError(getIdBulletin, 'bulletin not found')
+            existsOrError(getIdUnit, 'unit not found')
     
-            res.json(getIdBulletin)
+            res.json(getIdUnit)
         } catch (msg) {
             return res.status(400).send(msg)
         }

@@ -8,8 +8,6 @@ exports.up = function(knex) {
         table.foreign("discipline_id").references("discipline_id").inTable("discipline").onDelete('CASCADE');
         table.integer("student_id").unsigned().notNull();
         table.foreign("student_id").references("student_id").inTable("student").onDelete('CASCADE');
-        table.integer("classroom_id").unsigned().notNull();
-        table.foreign("classroom_id").references("classroom_id").inTable("classroom").onDelete('CASCADE');
     })
 };
 
