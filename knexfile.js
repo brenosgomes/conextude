@@ -5,7 +5,7 @@ module.exports = {
     connection: {
       database: 'conextude',
       user:     'root',
-      password: ''
+      password: '753849261'
     },
     migrations: {
       tableName: 'knex_migrations'
