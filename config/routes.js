@@ -143,9 +143,6 @@ module.exports = (app) => {
       .put(app.api.student.answer.put);
   
     //teacher
-    app.route("/teacher/clas/:id")
-        .get(app.api.teacher.clas.getById);
-  
     app.route("/teacher/classroom/:id")
         .get(app.api.teacher.classroom.getById);
   
@@ -220,6 +217,17 @@ module.exports = (app) => {
       .get(app.api.teacher.observation.getById)
       .delete(app.api.teacher.observation.remove)
       .put(app.api.teacher.observation.put);
+
+
+    app.route("/teacher/getClas/:id")
+      .get(app.api.teacher.clas.getClas)
+      
+    app.route("/teacher/getDiscipline/:id")
+      .get(app.api.teacher.clas.getDiscipline)
+
+    app.route("/teacher/getClassroom/:id")
+      .get(app.api.teacher.clas.getClassroom)
+      
   
     //adm
     app.route("/administrator")
