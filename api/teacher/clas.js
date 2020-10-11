@@ -49,8 +49,6 @@ module.exports = app => {
     const getClassroom = async (req, res) => {
         try {
             existsOrError(req.params.id, 'clas does not exist!')
-    
-            discipline_id = req.params.id
 
             const getIdSelectClas = await knex('employee')
             .select("person.person_name", "classroom.classroom_name")
