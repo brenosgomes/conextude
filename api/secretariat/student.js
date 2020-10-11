@@ -5,25 +5,31 @@ module.exports = (app) => {
 
   const get = async (req, res) => {
     const student = await knex("student")
-      .select("student_id", "person_name", "clas_name", "student_registration")
       .innerJoin("person", "person.person_id", "student.person_id")
-      .innerJoin("clas", "clas.clas_id", "student.clas_id");
+      .innerJoin("classroom", "classroom.classroom_id", "student.classroom_id")
+      .select(
+        "student.student_id",
+        "person.person_name",
+        "classroom.classroom_name",
+        "student.student_registration"
+      );
     return res.json(student);
   };
 
-    const getById = async (req, res) => {
-        try {
-            existsOrError(req.params.id, 'student does not exist!')
-    
-            const getIdStudent = await knex('student')
-                .where({ student_id: req.params.id }).first()
-            existsOrError(getIdStudent, 'student not found')
+  const getById = async (req, res) => {
+    try {
+      existsOrError(req.params.id, "student does not exist!");
 
-            res.json(getIdStudent)
-        } catch (msg) {
-            return res.status(400).send(msg)
-        }
+      const getIdStudent = await knex("student")
+        .where({ student_id: req.params.id })
+        .first();
+      existsOrError(getIdStudent, "student not found");
+
+      res.json(getIdStudent);
+    } catch (msg) {
+      return res.status(400).send(msg);
     }
+  };
 
   const remove = async (req, res) => {
     try {
@@ -52,22 +58,22 @@ module.exports = (app) => {
     }
   };
 
-    const put = async (req, res) => {
-        const student = req.body;
-        const student_id = req.params.id;
-        try{
-            existsOrError(student_id, 'student does not exist!')
-            
-            const attStudent = await knex("student")
-                .update(student)
-                .where({ student_id: student_id })
-            existsOrError(attStudent, 'student not found')
-            
-            res.status(200).send();
-        } catch(msg) {
-            return res.status(400).send(msg);   
-        }
+  const put = async (req, res) => {
+    const student = req.body;
+    const student_id = req.params.id;
+    try {
+      existsOrError(student_id, "student does not exist!");
+
+      const attStudent = await knex("student")
+        .update(student)
+        .where({ student_id: student_id });
+      existsOrError(attStudent, "student not found");
+
+      res.status(200).send();
+    } catch (msg) {
+      return res.status(400).send(msg);
     }
+  };
 
   return { get, getById, post, put, remove };
 };
