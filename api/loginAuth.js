@@ -5,23 +5,23 @@ const knex = require('../config/db')
 
 module.exports = app =>{
     const signIn = async (req, res) => {
-        if(!req.body.administrator_login || !req.body.administrator_password){
-            return res.status(400).send('Insira login e senha')
+        if(!req.body.login_login || !req.body.login_password || !req.body.login_flag){
+            return res.status(400).send('Insira login, senha e flag')
         }
 
-        const user = await knex('administrador').where({administrator_login: req.body.login}).first()
+        const user = await knex('login').where({login_login: req.body.login}).first()
 
-        if(!user) return res.status(400).send('Administrador não encontrado')
+        if(!user) return res.status(400).send('login não encontrado')
 
-        const isMatch = bcrypt.compareSync(req.body.administrator_password, user.administrator_password)
+        const isMatch = bcrypt.compareSync(req.body.login_password, user.login_password)
         if(!isMatch) return res.status(401).send('Combinação de login e senha inválida!')
 
         const now = Date.now()
 
         payload = {
-            id: user.administrator_id,
-            login: user.administrator_login,
-            password: user.administrator_password,
+            id: user.login_id,
+            login: user.login_login,
+            password: user.login_password,
             iat: now,
             exp: now + (1000 * 60 * 60 * 24)
         }

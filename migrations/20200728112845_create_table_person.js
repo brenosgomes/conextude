@@ -8,9 +8,7 @@ exports.up = function(knex) {
         table.string("person_cpf").notNull();
         table.string("person_rg").notNull();
         table.string("person_email").notNull();
-        table.string("person_phoneNumber").notNull();
-        table.string("person_login");
-        table.string("person_password");    
+        table.string("person_phoneNumber").notNull();  
     })
 };
 

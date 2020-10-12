@@ -63,7 +63,7 @@ module.exports = app => {
         }
 
         administrator_password = encryptPassword(administrator_password)
-        delete administrator_confirm_administrator_password
+        delete administrator_confirm_password
 
         await knex('administrator').insert({
             administrator_login,
