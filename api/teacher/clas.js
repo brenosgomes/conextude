@@ -11,6 +11,7 @@ module.exports = (app) => {
 
       const getIdSelectClas = await knex("employee")
         .select(
+          "clas.clas_id",
           "person.person_name",
           "classroom.classroom_name",
           "discipline.discipline_id",
@@ -46,6 +47,7 @@ module.exports = (app) => {
 
       const getIdSelectClas = await knex("employee")
         .select(
+          "person.person_id",
           "person.person_name",
           "classroom.classroom_name",
           "classroom.classroom_id"
@@ -73,7 +75,11 @@ module.exports = (app) => {
       existsOrError(req.params.id, "clas does not exist!");
 
       const getIdSelectClas = await knex("employee")
-        .select("person.person_name", "classroom.classroom_name")
+        .select(
+          "clas.clas_id",
+          "person.person_name",
+          "classroom.classroom_name"
+        )
         .innerJoin("clas", "employee.employee_id", "clas.employee_id")
         .innerJoin("student", "student.student_id", "clas.student_id")
         .innerJoin(

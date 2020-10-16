@@ -263,6 +263,8 @@ module.exports = (app) => {
 
   app.route("/teacher/lesson/").post(app.api.teacher.lesson.post);
 
+  app.route("/teacher/fault/").post(app.api.teacher.fault.post);
+
   //adm
   app
     .route("/administrator")
