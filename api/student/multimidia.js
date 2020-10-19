@@ -6,12 +6,15 @@ module.exports = app => {
         try {
             existsOrError(req.params.id, 'multimidia does not exist!')
 
+            const rows = await knex('student').where({ student_id: req.params.id}).first();
+
             const getIdMultimidia = await knex('multimidia')
-                .where({ multimidia_id: req.params.id }).first()
+                .where({ classroom_id: rows.classroom_id })
             existsOrError(getIdMultimidia, 'multimidia not found')
 
             res.json(getIdMultimidia)
         } catch (msg) {
+            console.log(msg)
             return res.status(400).send(msg)
         }
     }

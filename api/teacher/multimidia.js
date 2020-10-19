@@ -1,33 +1,21 @@
 const knex = require("../../config/db");
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
 
 module.exports = (app) => {
   const { existsOrError } = app.api.validator;
 
-  const get = async (req, res) => {
-    const multimidia = await knex("multimidia")
-      .select(
-        "multimidia.multimidia_id",
-        "multimidia.multimidia_description",
-        "multimidia.multimidia_link"
-      )
-      .innerJoin(
-        "classroom",
-        "classroom.classroom_id",
-        "multimidia.classroom_id"
-      );
-    return res.json(multimidia);
-  };
 
   const getById = async (req, res) => {
     try {
-      existsOrError(req.params.id, "multimida does not exist!");
+      existsOrError(req.params.id, "multimidia does not exist!");
 
-      const getIdMultimida = await knex("multimida")
-        .where({ multimida_id: req.params.id })
-        .first();
-      existsOrError(getIdMultimida, "multimida not found");
+      const getIdMultimidia = await knex("multimidia")
+        .where({ employee_id: req.params.id })
+      existsOrError(getIdMultimidia, "multimidia not found");
 
-      res.json(getIdMultimida);
+      res.json(getIdMultimidia);
     } catch (msg) {
       return res.status(400).send(msg);
     }
@@ -37,45 +25,50 @@ module.exports = (app) => {
     try {
       existsOrError(req.params.id, "multimidia does not exist!");
 
-      const rowsDeleted = await app
-        .db("multimidia")
-        .del()
-        .where({ multimidia_id: req.params.id });
+      const rows = await knex("multimidia").where({ multimidia_id: req.params.id }).first();
+
+      const rowsDeleted = await knex("multimidia").del().where({ multimidia_id: rows.multimidia_id });
+     
       existsOrError(rowsDeleted, "multimidia not found");
+
+      fs.unlink(`tmp/uploads/${rows.multimidia_key}`, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('removed');
+        }
+      });
+
+      console.log(rows.multimidia_key)
 
       res.status(204).send();
     } catch (msg) {
+      console.log(msg)
       return res.status(400).send(msg);
     }
   };
 
   const post = async (req, res) => {
-    const multimidia = req.body;
+    console.log(req.file)
+    if (!req.body.url)
+      req.body.url = `http://localhost:5000/files/${req.file.filename}`
     try {
-      const newmultimidia = await knex("multimidia").insert(multimidia);
-      res.json(newmultimidia);
-    } catch (err) {
-      console.log(res);
-      return res.status(500).send(err);
+        const newMultimidia = await knex("multimidia")
+        .insert({
+          classroom_id: req.body.classroom_id,
+          employee_id: req.body.employee_id,
+          multimidia_name: req.file.originalname,
+          multimidia_size: req.file.size,
+          multimidia_key: req.file.filename,
+          multimidia_url: req.body.url,
+          multimidia_description: req.body.multimidia_description,
+        })
+        return res.json(newMultimidia);
+    }catch (err) {
+        console.log(res);
+        return res.status(500).send(err);
     }
-  };
+  } 
 
-  const put = async (req, res) => {
-    const multimidia = req.body;
-    const multimidia_id = req.params.id;
-    try {
-      existsOrError(multimida_id, "multimida does not exist!");
-
-      const attMultimida = await knex("multimida")
-        .update(multimida)
-        .where({ multimida_id: multimida_id });
-      existsOrError(attMultimida, "multimida not found");
-
-      res.status(200).send();
-    } catch (msg) {
-      return res.status(400).send(msg);
-    }
-  };
-
-  return { get, getById, post, put, remove };
+  return { getById, post, remove };
 };

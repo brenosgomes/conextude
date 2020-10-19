@@ -5,7 +5,7 @@ exports.up = function(knex) {
         table.integer("classroom_id").unsigned().notNull();
         table.foreign("classroom_id").references("classroom_id").inTable("classroom").onDelete('CASCADE');
         table.string("scraps_title").notNull();
-        table.string("scraps_description").notNull();
+        table.string("scraps_description", [5000]).notNull();
         table.date("scraps_date").notNull();
     })
 };

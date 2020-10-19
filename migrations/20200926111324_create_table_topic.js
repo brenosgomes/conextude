@@ -7,6 +7,7 @@ exports.up = function(knex) {
         table.integer("employee_id").unsigned().nullable();
         table.foreign("employee_id").references("employee_id").inTable("employee").onDelete('CASCADE');
         table.string("topic_topic").notNull();
+        table.string("topic_description", [5000]).notNull();
     })
 };
 

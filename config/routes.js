@@ -1,3 +1,6 @@
+const multer = require('multer');
+const multerConfig = require('../config/multer')
+
 module.exports = (app) => {
   //secretariat
   app
@@ -211,14 +214,12 @@ module.exports = (app) => {
 
   app
     .route("/teacher/multimidia")
-    .get(app.api.teacher.multimidia.get)
-    .post(app.api.teacher.multimidia.post);
+    .post(multer(multerConfig).single('file'), (app.api.teacher.multimidia.post));
 
   app
     .route("/teacher/multimidia/:id")
     .get(app.api.teacher.multimidia.getById)
-    .delete(app.api.teacher.multimidia.remove)
-    .put(app.api.teacher.multimidia.put);
+    .delete(app.api.teacher.multimidia.remove);
 
   app
     .route("/teacher/topic")
@@ -253,17 +254,37 @@ module.exports = (app) => {
     .delete(app.api.teacher.observation.remove)
     .put(app.api.teacher.observation.put);
 
-  app.route("/teacher/getClas/:id").get(app.api.teacher.clas.getClas);
+  app
+    .route("/teacher/lesson")
+    .get(app.api.teacher.lesson.get)
+    .post(app.api.teacher.lesson.post);
 
   app
-    .route("/teacher/getDiscipline/:id")
+    .route("/teacher/lesson/:id")
+    .get(app.api.teacher.lesson.getById)
+    .delete(app.api.teacher.lesson.remove)
+    .put(app.api.teacher.lesson.put);
+
+  app
+    .route("/teacher/fault")
+    .get(app.api.teacher.fault.get)
+    .post(app.api.teacher.fault.post);
+
+  app
+    .route("/teacher/fault/:id")
+    .get(app.api.teacher.fault.getById)
+    .delete(app.api.teacher.fault.remove)
+    .put(app.api.teacher.fault.put);
+
+  app.route("/teacher/getClas/:id")
+    .get(app.api.teacher.clas.getClas);
+
+  app.route("/teacher/getDiscipline/:id")
     .get(app.api.teacher.clas.getDiscipline);
 
-  app.route("/teacher/getClassroom/:id").get(app.api.teacher.clas.getClassroom);
+  app.route("/teacher/getClassroom/:id")
+    .get(app.api.teacher.clas.getClassroom);
 
-  app.route("/teacher/lesson/").post(app.api.teacher.lesson.post);
-
-  app.route("/teacher/fault/").post(app.api.teacher.fault.post);
 
   //adm
   app
@@ -276,4 +297,15 @@ module.exports = (app) => {
     .get(app.api.administrator.getById)
     .delete(app.api.administrator.remove)
     .put(app.api.administrator.put);
+
+  app
+    .route("/login")
+    .get(app.api.login.get)
+    .post(app.api.login.post);
+
+  app
+    .route("/login/:id")
+    .get(app.api.login.getById)
+    .delete(app.api.login.remove)
+    .put(app.api.login.put);
 };
