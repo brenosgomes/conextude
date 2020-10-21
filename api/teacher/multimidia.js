@@ -47,7 +47,6 @@ module.exports = (app) => {
 
       res.status(204).send();
     } catch (msg) {
-      console.log(msg);
       return res.status(400).send(msg);
     }
   };
@@ -68,7 +67,6 @@ module.exports = (app) => {
       });
       return res.json(newMultimidia);
     } catch (err) {
-      console.log(res);
       return res.status(500).send(err);
     }
   };

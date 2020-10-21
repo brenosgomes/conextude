@@ -1,5 +1,6 @@
 const multer = require('multer');
 const multerConfig = require('../config/multer')
+const multerConfigImg = require('../config/multerQuestion')
 
 module.exports = (app) => {
   //secretariat
@@ -123,6 +124,28 @@ module.exports = (app) => {
     .get(app.api.secretariat.payment.getById)
     .delete(app.api.secretariat.payment.remove)
     .put(app.api.secretariat.payment.put);
+
+  app
+    .route("/secretariat/option")
+    .get(app.api.secretariat.option.get)
+    .post(app.api.secretariat.option.post);
+
+  app
+    .route("/secretariat/option/:id")
+    .get(app.api.secretariat.option.getById)
+    .delete(app.api.secretariat.option.remove)
+    .put(app.api.secretariat.option.put);
+
+    app
+    .route("/secretariat/question")
+    .get(app.api.secretariat.question.get)
+    .post(multer(multerConfigImg).single('file'), (app.api.secretariat.question.post));
+
+  app
+    .route("/secretariat/question/:id")
+    .get(app.api.secretariat.question.getById)
+    .delete(app.api.secretariat.question.remove)
+    .put(app.api.secretariat.question.put);
 
   //student
   app.route("/student/student/:id").get(app.api.student.student.getById);
@@ -275,6 +298,9 @@ module.exports = (app) => {
     .get(app.api.teacher.fault.getById)
     .delete(app.api.teacher.fault.remove)
     .put(app.api.teacher.fault.put);
+  
+  app.route("/teacher/student/:query")
+    .get(app.api.teacher.student.get);
 
   app.route("/teacher/getClas/:id")
     .get(app.api.teacher.clas.getClas);

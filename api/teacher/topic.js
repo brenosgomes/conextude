@@ -4,7 +4,18 @@ module.exports = app => {
     const { existsOrError } = app.api.validator
 
     const get = async (req, res) => {
-        const topic = await knex("topic").select("*");
+        const topicStudent = await knex("topic")
+        .select("topic.topic_id", "person.person_name", "topic.student_id", "topic.topic_topic", "topic.topic_description")
+        .innerJoin("student", "student.student_id", "topic.student_id")
+        .innerJoin("person", "student.person_id", "person.person_id");
+        
+        const topicEmployee = await knex("topic")
+        .select("topic.topic_id", "person.person_name", "topic.employee_id", "topic.topic_topic", "topic.topic_description")
+        .innerJoin("employee", "employee.employee_id", "topic.employee_id")
+        .innerJoin("person", "employee.person_id", "person.person_id");
+        
+        topic = {topicStudent, topicEmployee}
+
         return res.json(topic)
     }
 
