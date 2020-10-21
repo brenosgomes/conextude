@@ -30,10 +30,12 @@ module.exports = (app) => {
       .orderBy("answer_id", "asc")
       .select("*");
 
-    const answer = [...answerEmployee, answerStudent];
+    const answer = [...answerEmployee, ...answerStudent];
+    console.log(answer);
 
     answer.sort(compareAnswers);
 
+    console.log(answer);
     return res.json(answer);
   };
 
