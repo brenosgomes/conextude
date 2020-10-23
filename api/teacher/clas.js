@@ -13,6 +13,7 @@ module.exports = (app) => {
         .select(
           "clas.clas_id",
           "person.person_name",
+          "classroom.classroom_id",
           "classroom.classroom_name",
           "discipline.discipline_id",
           "discipline.discipline_name"

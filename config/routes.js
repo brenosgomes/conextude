@@ -1,6 +1,6 @@
-const multer = require('multer');
-const multerConfig = require('../config/multer')
-const multerConfigImg = require('../config/multerQuestion')
+const multer = require("multer");
+const multerConfig = require("../config/multer");
+const multerConfigImg = require("../config/multerQuestion");
 
 module.exports = (app) => {
   //secretariat
@@ -136,10 +136,13 @@ module.exports = (app) => {
     .delete(app.api.secretariat.option.remove)
     .put(app.api.secretariat.option.put);
 
-    app
+  app
     .route("/secretariat/question")
     .get(app.api.secretariat.question.get)
-    .post(multer(multerConfigImg).single('file'), (app.api.secretariat.question.post));
+    .post(
+      multer(multerConfigImg).single("file"),
+      app.api.secretariat.question.post
+    );
 
   app
     .route("/secretariat/question/:id")
@@ -237,7 +240,7 @@ module.exports = (app) => {
 
   app
     .route("/teacher/multimidia")
-    .post(multer(multerConfig).single('file'), (app.api.teacher.multimidia.post));
+    .post(multer(multerConfig).single("file"), app.api.teacher.multimidia.post);
 
   app
     .route("/teacher/multimidia/:id")
@@ -298,19 +301,16 @@ module.exports = (app) => {
     .get(app.api.teacher.fault.getById)
     .delete(app.api.teacher.fault.remove)
     .put(app.api.teacher.fault.put);
-  
-  app.route("/teacher/student/:query")
-    .get(app.api.teacher.student.get);
 
-  app.route("/teacher/getClas/:id")
-    .get(app.api.teacher.clas.getClas);
+  app.route("/teacher/student/:query").get(app.api.teacher.student.get);
 
-  app.route("/teacher/getDiscipline/:id")
+  app.route("/teacher/getClas/:id").get(app.api.teacher.clas.getClas);
+
+  app
+    .route("/teacher/getDiscipline/:id")
     .get(app.api.teacher.clas.getDiscipline);
 
-  app.route("/teacher/getClassroom/:id")
-    .get(app.api.teacher.clas.getClassroom);
-
+  app.route("/teacher/getClassroom/:id").get(app.api.teacher.clas.getClassroom);
 
   //adm
   app
@@ -324,14 +324,13 @@ module.exports = (app) => {
     .delete(app.api.administrator.remove)
     .put(app.api.administrator.put);
 
-  app
-    .route("/login")
-    .get(app.api.login.get)
-    .post(app.api.login.post);
+  app.route("/login").get(app.api.login.get).post(app.api.login.post);
 
   app
     .route("/login/:id")
     .get(app.api.login.getById)
     .delete(app.api.login.remove)
     .put(app.api.login.put);
+
+  app.route("/auth").post(app.api.loginAuth.signIn);
 };
