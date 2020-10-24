@@ -28,6 +28,8 @@ module.exports = (app) => {
       id: user.login_id,
       login: user.login_login,
       password: user.login_password,
+      employee_id: user.employee_id,
+      student_id: user.student_id,
       flag: user.login_flag,
       iat: now,
       exp: now + 1000 * 60 * 60 * 24,
