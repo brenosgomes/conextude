@@ -333,4 +333,5 @@ module.exports = (app) => {
     .put(app.api.login.put);
 
   app.route("/auth").post(app.api.loginAuth.signIn);
+  app.route("/token").post(app.api.loginAuth.validateToken);
 };

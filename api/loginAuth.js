@@ -42,13 +42,18 @@ module.exports = (app) => {
   };
 
   const validateToken = (req, res) => {
-    const userData = req.body || null;
+    const { userData } = req.body || null;
 
     try {
       if (userData) {
         const token = jwt.decode(userData.token, authSecret);
         if (new Date(token.exp * 1000) > new Date()) {
-          return res.send(true);
+          return res.status(200).json({
+            success: true,
+            employee_id: token.employee_id,
+            student_id: token.student_id,
+            flag: token.flag,
+          });
         }
       }
     } catch (e) {
