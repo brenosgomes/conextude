@@ -1,4 +1,4 @@
-const { authSecret } = require('../.env')
+const { authSecret }  = require("../.env");
 const jwt = require('jwt-simple')
 const bcrypt = require('bcryptjs')
 const knex = require('../config/db')
@@ -9,7 +9,7 @@ module.exports = app =>{
             return res.status(400).send('Insira login, senha e flag')
         }
 
-        const user = await knex('login').where({login_login: req.body.login}).first()
+        const user = await knex('login').where({login_login: req.body.login_login}).first()
 
         if(!user) return res.status(400).send('login não encontrado')
 
@@ -25,6 +25,7 @@ module.exports = app =>{
             iat: now,
             exp: now + (1000 * 60 * 60 * 24)
         }
+        console.log(authSecret)
 
         res.json({
             ...payload,

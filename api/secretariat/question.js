@@ -15,12 +15,12 @@ module.exports = (app) => {
     try {
       existsOrError(req.params.id, "question does not exist!");
 
-      const getIdquestion = await knex("question").where({
+      const getIdQuestion = await knex("question").where({
         employee_id: req.params.id,
       });
-      existsOrError(getIdquestion, "question not found");
+      existsOrError(getIdQuestion, "question not found");
 
-      res.json(getIdquestion);
+      res.json(getIdQuestion);
     } catch (msg) {
       return res.status(400).send(msg);
     }
@@ -40,13 +40,15 @@ module.exports = (app) => {
 
       existsOrError(rowsDeleted, "question not found");
 
-      fs.unlink(`tmp/img/${rows.question_key}`, (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("removed");
-        }
-      });
+      if(rows.question_key){
+        fs.unlink(`tmp/img/${rows.question_key}`, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("removed");
+          }
+        });
+      }
 
       res.status(204).send();
     } catch (msg) {
@@ -56,23 +58,40 @@ module.exports = (app) => {
   };
 
   const post = async (req, res) => {
-    console.log(req.file);
-    if (!req.body.url)
-      req.body.url = `http://localhost:5000/files/${req.file.filename}`;
-    try {
-      const newquestion = await knex("question").insert({
-        question_id: req.body.question_id,
-        question_name: req.file.originalname,
-        question_size: req.file.size,
-        question_key: req.file.filename,
-        question_url: req.body.url,
-        question_question: req.body.question_question,
-        question_description: req.body.question_description,
-      });
-      return res.json(newquestion);
-    } catch (err) {
-      return res.status(500).send(err);
+    if (req.file){
+      if (!req.body.url)
+        req.body.url = `http://localhost:5000/files/${req.file.filename}`;
+      try {
+        const newquestion = await knex("question").insert({
+          question_name: req.file.originalname,
+          question_size: req.file.size,
+          question_key: req.file.filename,
+          question_url: req.body.url,
+          question_question: req.body.question_question,
+          question_description: req.body.question_description,
+          question_discipline: req.body.question_discipline
+        });
+        return res.json(newquestion);
+      } catch (err) {
+        return res.status(500).send(err);
+      }
+    } else {
+      try {
+        const newquestion = await knex("question").insert({
+          question_name: null,
+          question_size: null,
+          question_key: null,
+          question_url: null,
+          question_question: req.body.question_question,
+          question_description: req.body.question_description,
+          question_discipline: req.body.question_discipline
+        });
+        return res.json(newquestion);
+      } catch (err) {
+        return res.status(500).send(err);
+      }
     }
+
   };
 
   const put = async (req, res) => {

@@ -1,16 +1,41 @@
 const knex = require("../../config/db");
 
+function compareAnswers(a, b) {
+  if (a.answer_id < b.answer_id) {
+    return -1;
+  }
+  if (a.answer_id > b.answer_id) {
+    return 1;
+  }
+  return 0;
+}
+
 module.exports = (app) => {
   const { existsOrError } = app.api.validator;
 
   const get = async (req, res) => {
     const { id } = req.headers;
 
-    const answer = await knex("answer")
+    const answerEmployee = await knex("answer")
       .innerJoin("employee", "employee.employee_id", "answer.employee_id")
       .innerJoin("person", "person.person_id", "employee.person_id")
       .where("topic_id", id)
+      .orderBy("answer_id", "asc")
       .select("*");
+
+    const answerStudent = await knex("answer")
+      .innerJoin("student", "student.student_id", "answer.student_id")
+      .innerJoin("person", "person.person_id", "student.person_id")
+      .where("topic_id", id)
+      .orderBy("answer_id", "asc")
+      .select("*");
+
+    const answer = [...answerEmployee, ...answerStudent];
+    console.log(answer);
+
+    answer.sort(compareAnswers);
+
+    console.log(answer);
     return res.json(answer);
   };
 

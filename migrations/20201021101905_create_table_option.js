@@ -4,7 +4,7 @@ exports.up = function(knex) {
         table.increments("option_id").primary();
         table.integer("question_id").unsigned().notNull();
         table.foreign("question_id").references("question_id").inTable("question").onDelete('CASCADE');
-        table.string("option_flag").notNull();
+        table.boolean("option_flag").notNull();
         table.string("option_option").notNull();
         table.string("option_answer").notNull();
     })

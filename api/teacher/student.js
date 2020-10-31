@@ -1,9 +1,12 @@
 const knex = require("../../config/db");
 
 module.exports = (app) => {
+    const { existsOrError } = app.api.validator
 
     const get = async (req, res) => {
         try{
+            existsOrError(req.params.query, "student does not exist!");
+
             const student = await knex("student")
                 .innerJoin("person", "person.person_id", "student.person_id")
                 .innerJoin("classroom", "classroom.classroom_id", "student.classroom_id")

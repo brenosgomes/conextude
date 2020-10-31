@@ -43,7 +43,7 @@ module.exports = {
     fileSize: 1 * 1024 * 1024,
   },
   fileFilter: (req, file, cb) => {
-    allowedMimes = ["application/pdf", "application/docx"];
+    allowedMimes = ["application/pdf", "application/docx", "application/msword"];
 
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);

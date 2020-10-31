@@ -43,7 +43,7 @@ module.exports = app => {
       }
     
     const post = async (req, res) => {
-        const { student_id, employee_id, login_flag, login_login, login_password, login_confirm_password } = req.body;
+        let { student_id, employee_id, login_flag, login_login, login_password, login_confirm_password } = req.body;
         try {
             existsOrError(login_login, 'Login não informado')
             existsOrError(login_password, 'Senha não informada')
