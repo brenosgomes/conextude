@@ -1,6 +1,6 @@
-const multer = require('multer');
-const multerConfig = require('../config/multer')
-const multerConfigImg = require('../config/multerQuestion')
+const multer = require("multer");
+const multerConfig = require("../config/multer");
+const multerConfigImg = require("../config/multerQuestion");
 
 module.exports = (app) => {
   //secretariat
@@ -136,10 +136,13 @@ module.exports = (app) => {
     .delete(app.api.secretariat.option.remove)
     .put(app.api.secretariat.option.put);
 
-    app
+  app
     .route("/secretariat/question")
     .get(app.api.secretariat.question.get)
-    .post(multer(multerConfigImg).single('file'), (app.api.secretariat.question.post));
+    .post(
+      multer(multerConfigImg).single("file"),
+      app.api.secretariat.question.post
+    );
 
   app
     .route("/secretariat/question/:id")
@@ -154,7 +157,9 @@ module.exports = (app) => {
 
   app.route("/student/calendar/:id").get(app.api.student.calendar.getById);
 
-  app.route("/student/supportMaterial/:id").get(app.api.student.supportMaterial.getById);
+  app
+    .route("/student/supportMaterial/:id")
+    .get(app.api.student.supportMaterial.getById);
 
   app.route("/student/payment/:id").get(app.api.student.payment.getById);
 
@@ -162,7 +167,9 @@ module.exports = (app) => {
 
   app.route("/student/fault/:id").get(app.api.student.fault.getById);
 
-  app.route("/student/observation/:id").get(app.api.student.observation.getById);
+  app
+    .route("/student/observation/:id")
+    .get(app.api.student.observation.getById);
 
   app.route("/student/clas/:id").get(app.api.student.clas.getClas);
 
@@ -201,16 +208,7 @@ module.exports = (app) => {
     .delete(app.api.student.answerList.remove)
     .put(app.api.student.answerList.put);
 
-  app
-    .route("/student/multimedia")
-    .get(app.api.student.multimedia.get)
-    .post(app.api.student.multimedia.post);
-
-  app
-    .route("/student/multimedia/:id")
-    .get(app.api.student.multimedia.getById)
-    .delete(app.api.student.multimedia.remove)
-    .put(app.api.student.multimedia.put);
+  app.route("/student/multimedia/:id").get(app.api.student.multimedia.getById);
 
   //teacher
   app.route("/teacher/classroom/:id").get(app.api.teacher.classroom.getById);
@@ -261,7 +259,10 @@ module.exports = (app) => {
 
   app
     .route("/teacher/supportMaterial")
-    .post(multer(multerConfig).single('file'), (app.api.teacher.supportMaterial.post));
+    .post(
+      multer(multerConfig).single("file"),
+      app.api.teacher.supportMaterial.post
+    );
 
   app
     .route("/teacher/supportMaterial/:id")
@@ -344,25 +345,24 @@ module.exports = (app) => {
     .get(app.api.teacher.multimedia.getById)
     .delete(app.api.teacher.multimedia.remove)
     .put(app.api.teacher.multimedia.put);
-  
-  app.route("/teacher/student/:query")
-    .get(app.api.teacher.student.get);
 
-  app.route("/teacher/question/:query")
+  app.route("/teacher/student/:query").get(app.api.teacher.student.get);
+
+  app
+    .route("/teacher/question/:query")
     .get(app.api.teacher.question.getQuestionDiscipline);
 
-  app.route("/teacher/questionn/:id")
+  app
+    .route("/teacher/questionn/:id")
     .get(app.api.teacher.question.getQuestionOption);
 
-  app.route("/teacher/getClas/:id")
-    .get(app.api.teacher.clas.getClas);
+  app.route("/teacher/getClas/:id").get(app.api.teacher.clas.getClas);
 
-  app.route("/teacher/getDiscipline/:id")
+  app
+    .route("/teacher/getDiscipline/:id")
     .get(app.api.teacher.clas.getDiscipline);
 
-  app.route("/teacher/getClassroom/:id")
-    .get(app.api.teacher.clas.getClassroom);
-
+  app.route("/teacher/getClassroom/:id").get(app.api.teacher.clas.getClassroom);
 
   //adm
   app
@@ -376,10 +376,7 @@ module.exports = (app) => {
     .delete(app.api.administrator.remove)
     .put(app.api.administrator.put);
 
-  app
-    .route("/login")
-    .get(app.api.login.get)
-    .post(app.api.login.post);
+  app.route("/login").get(app.api.login.get).post(app.api.login.post);
 
   app
     .route("/login/:id")
