@@ -34,7 +34,6 @@ module.exports = (app) => {
       iat: now,
       exp: now + 1000 * 60 * 60 * 24,
     };
-    console.log(authSecret);
 
     res.json({
       ...payload,
@@ -43,7 +42,7 @@ module.exports = (app) => {
   };
 
   const validateToken = (req, res) => {
-    const userData = req.body || null;
+    const { userData } = req.body || null;
 
     try {
       if (userData) {
